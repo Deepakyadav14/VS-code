@@ -1,1 +1,61 @@
-<h2>Hello there this is working</h2>h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DOM manipulation</title>
+</head>
+<body>
+    <form action="myform">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br><br>
+        <input type="submit" value="Submit" id="submitBtn">
+    </form>
+  
+
+   <script>
+    let btn = document.getElementById("submitBtn");
+    btn.addEventListener("click", function(evnt) {
+        evnt.preventDefault(); // Prevent the default form submission
+
+        // Collect form data
+        let form = document.querySelector("form");
+        let formData = new FormData(form);
+
+        // Convert FormData to a JSON object
+        let data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // Send the data to the server
+        fetch('https://example.com/api/save', { // Replace with your server endpoint
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+           
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to save data');
+            }
+        })
+        .then(result => {
+            console.log('Data saved successfully:', result);
+            alert('Form submitted successfully!');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to submit the form.');
+        });
+    });
+</script>
+</body>
+</html>
